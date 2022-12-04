@@ -59,6 +59,8 @@ namespace ScrapperServices.Services.Scrapper
                 while (page < 2)
                 {
                     driver.Navigate().GoToUrl($"{url}/page-{page}");
+                    Task.Delay(1000);
+
                     //driver.Navigate().GoToUrl($"https://www.sportvision.mk/obuvki/page-{page}");
                     var productData = driver.FindElements(By.CssSelector(".item-data")).ToList();
 
