@@ -101,7 +101,7 @@ app.UseHttpsRedirection();
 
 var dashboardOptions = new DashboardOptions
 {
-    DashboardTitle = "LtasEClient",
+    DashboardTitle = "EShop_Client",
     Authorization = new[] { new BasicAuthAuthorizationFilter(new BasicAuthAuthorizationFilterOptions
             {
                 RequireSsl = false,

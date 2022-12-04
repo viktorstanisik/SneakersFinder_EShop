@@ -47,9 +47,6 @@ namespace ScrapperServices.Services.Scrapper
             }
         }
 
-
-
-
         private List<ScrappedModel> ScrapeMain(string url)
         {
             int page = 0;
