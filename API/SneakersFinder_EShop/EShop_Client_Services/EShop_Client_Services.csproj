@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Hangfire" Version="1.7.32" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0" />
+		<PackageReference Include="RestSharp" Version="108.0.3" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\EShop_Client_DataAccess\EShop_Client_DataAccess.csproj" />
+	  <ProjectReference Include="..\EShop_Client_Domain\EShop_Client_Domain.csproj" />
+	  <ProjectReference Include="..\EShop_Client_Shared\EShop_Client_Shared.csproj" />
+	</ItemGroup>
+
+</Project>

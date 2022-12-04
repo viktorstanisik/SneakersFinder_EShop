@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Scrapper_Domain\Scrapper_Domain.csproj" />
+    <ProjectReference Include="..\Scrapper_Shared\Scrapper_Shared.csproj" />
+  </ItemGroup>
+
+	
+
+</Project>
