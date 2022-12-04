@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Extensions.Configuration;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Scrapper_DataAccess.Repositories.SportVision;
 using Scrapper_Domain.Models;
@@ -10,22 +11,55 @@ namespace ScrapperServices.Services.Scrapper
     public class ScrapperService : IScrapperService
     {
         private readonly ISportVisionRepository _sportVisionRepository;
-
-        public ScrapperService(ISportVisionRepository sportVisionRepository)
+        private readonly IConfiguration _configuration;
+        public ScrapperService(ISportVisionRepository sportVisionRepository, IConfiguration configuration)
         {
             _sportVisionRepository = sportVisionRepository;
+            _configuration = configuration;
+        }
+
+        public async Task SportRealityScrapper()
+        {
+            var models = ScrapeMain(_configuration["StoresUrl:SportReality"]);
+            if (models.Count > 0)
+            {
+                await _sportVisionRepository.SaveEntities(models);
+            }
         }
 
         public async Task SportVisionScrapper()
         {
-            //int page = 125;
+
+            var models = ScrapeMain(_configuration["StoresUrl:SportVison"]);
+            if(models.Count > 0)
+            { 
+                await _sportVisionRepository.SaveEntities(models);
+            }
+        }
+
+        public async Task BuzzScrapper()
+        {
+
+            var models = ScrapeMain(_configuration["StoresUrl:Buzz"]);
+            if (models.Count > 0)
+            {
+                await _sportVisionRepository.SaveEntities(models);
+            }
+        }
+
+
+
+
+        private List<ScrappedModel> ScrapeMain(string url)
+        {
             int page = 0;
-            List<SportVisonScrappedModel> items = new();
+            List<ScrappedModel> items = new();
             using (ChromeDriver driver = new ChromeDriver())
             {
                 while (page < 2)
                 {
-                    driver.Navigate().GoToUrl($"https://www.sportvision.mk/obuvki/page-{page}");
+                    driver.Navigate().GoToUrl($"{url}/page-{page}");
+                    //driver.Navigate().GoToUrl($"https://www.sportvision.mk/obuvki/page-{page}");
                     var productData = driver.FindElements(By.CssSelector(".item-data")).ToList();
 
                     if (productData.Count == 0)
@@ -35,7 +69,7 @@ namespace ScrapperServices.Services.Scrapper
                     {
                         var prices = prod.FindElement(By.CssSelector(".prices-wrapper")).Text.Split("\r\n");
 
-                        items.Add(new SportVisonScrappedModel()
+                        items.Add(new ScrappedModel()
                         {
                             Name = prod.FindElement(By.ClassName("title")).Text,
                             Brand = ConvertBrandToEnum(prod.FindElement(By.CssSelector(".brand > a")).GetAttribute("text")),
@@ -49,11 +83,10 @@ namespace ScrapperServices.Services.Scrapper
 
                     page++;
                 }
-                //var itemsSerialized = JsonSerializer.Serialize(items);
-
             }
-                await _sportVisionRepository.SaveEntities(items);
+            return items;
         }
+
 
         private int ConvertBrandToEnum(string brand)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scrapper_Domain.Models
 {
-    public class SportVisonScrappedModel
+    public class ScrappedModel
     {
         public string Name { get; set; }
         public int Brand { get; set; }

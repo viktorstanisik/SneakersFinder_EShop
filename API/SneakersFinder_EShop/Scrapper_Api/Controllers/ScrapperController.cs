@@ -16,11 +16,14 @@ namespace Scrapper_Api.Controllers
         }
 
         [HttpGet("sport-vision")]
-        public async Task<IActionResult> ScrapSportVision()
+        public async Task<IActionResult> ScrapSportVisionGroupation()
         {
             try
             {
                 await _scrapperService.SportVisionScrapper();
+                await _scrapperService.SportRealityScrapper();
+                await _scrapperService.BuzzScrapper();
+
                 return Ok();
 
             }
@@ -30,5 +33,21 @@ namespace Scrapper_Api.Controllers
                 throw;
             }
         }
+
+        //[HttpGet("sport-reality")]
+        //public async Task<IActionResult> ScrapSportReality()
+        //{
+        //    try
+        //    {
+        //        await _scrapperService.SportRealityScrapper();
+        //        return Ok();
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
     }
 }

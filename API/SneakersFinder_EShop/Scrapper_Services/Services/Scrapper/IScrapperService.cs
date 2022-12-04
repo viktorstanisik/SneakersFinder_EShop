@@ -9,6 +9,8 @@ namespace ScrapperServices.Services.Scrapper
     public interface IScrapperService
     {
         public Task SportVisionScrapper();
+        public Task SportRealityScrapper();
+        public Task BuzzScrapper();
 
     }
 }

@@ -9,14 +9,13 @@ namespace Scrapper_DataAccess.Repositories.SportVision
     {
         private readonly ScrapperDbContext _scrapperDbContext;
         //private readonly ILogger _logger;
-
         public SportVisionRepository(ScrapperDbContext scrapperDbContext/* ILogger logger*/)
         {
             _scrapperDbContext = scrapperDbContext;
             //_logger = logger;
         }
 
-        public async Task SaveEntities(List<SportVisonScrappedModel> models)
+        public async Task SaveEntities(List<ScrappedModel> models)
         {
             
 
@@ -34,6 +33,8 @@ namespace Scrapper_DataAccess.Repositories.SportVision
                 };
                 try
                 {
+                    //KOGA KE VLEZE AKO IMA VEKE TAKVA STAVKA DA NE PRAVI ADD DA PRAI UPDATE
+                    //LOGGER
                     await _scrapperDbContext.AddAsync(svModel);
                     await _scrapperDbContext.SaveChangesAsync();
 

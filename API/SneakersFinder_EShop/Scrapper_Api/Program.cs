@@ -25,6 +25,8 @@ builder.Services.AddTransient<ISportVisionRepository, SportVisionRepository>();
 
 var dbConnectionString = builder.Configuration["ConnectionStrings:DatabaseConnectionString"];
 
+//CONFIG NA LOGGER DA IMA DEBUG I INFORMATION MODE
+
 builder.Services.AddDbContext<ScrapperDbContext>(options => options.UseSqlServer(dbConnectionString));
 
 var app = builder.Build();
