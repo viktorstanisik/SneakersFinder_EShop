@@ -51,6 +51,8 @@ namespace Scrapper_Shared.Enums
     public enum Store
     {
         SportVision = 1,
-        SportM = 2
+        SportM = 2,
+        Buzz = 3,
+        SportReality = 4
     }
 }

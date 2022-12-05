@@ -17,22 +17,23 @@ namespace Scrapper_DataAccess.Repositories.SportVision
 
         public async Task SaveEntities(List<ScrappedModel> models)
         {
-            
+
 
             foreach (var item in models)
             {
-                SportVisonDbModel svModel = new()
-                {
-                    PriceWithDiscount = item.PriceWithDiscount,
-                    RegularPrice = item.RegularPrice,
-                    DiscountPercent = item.DiscountPercent,
-                    Store = item.Store,
-                    Brand = item.Brand,
-                    Link = item.Link,
-                    Name = item.Name
-                };
                 try
                 {
+                    SportVisonDbModel svModel = new()
+                    {
+                        PriceWithDiscount = item.PriceWithDiscount,
+                        RegularPrice = item.RegularPrice,
+                        DiscountPercent = item.DiscountPercent,
+                        Store = item.Store,
+                        Brand = item.Brand,
+                        Link = item.Link,
+                        Name = item.Name
+                    };
+
                     //KOGA KE VLEZE AKO IMA VEKE TAKVA STAVKA DA NE PRAVI ADD DA PRAI UPDATE
                     //LOGGER
                     await _scrapperDbContext.AddAsync(svModel);

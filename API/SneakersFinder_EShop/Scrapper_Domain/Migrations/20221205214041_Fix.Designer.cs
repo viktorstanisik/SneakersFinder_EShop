@@ -11,8 +11,8 @@ using Scrapper_Domain;
 namespace Scrapper_Domain.Migrations
 {
     [DbContext(typeof(ScrapperDbContext))]
-    [Migration("20221204140150_AddedModelBuilder")]
-    partial class AddedModelBuilder
+    [Migration("20221205214041_Fix")]
+    partial class Fix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

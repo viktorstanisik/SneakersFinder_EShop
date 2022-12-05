@@ -4,7 +4,7 @@
 
 namespace Scrapper_Domain.Migrations
 {
-    public partial class InitialScrapperCreate : Migration
+    public partial class Fix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

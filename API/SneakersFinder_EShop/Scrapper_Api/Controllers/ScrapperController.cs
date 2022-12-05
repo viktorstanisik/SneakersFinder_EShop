@@ -15,7 +15,7 @@ namespace Scrapper_Api.Controllers
             _scrapperService = scrapperService;
         }
 
-        [HttpGet("sport-vision")]
+        [HttpGet("scrape")]
         public async Task<IActionResult> ScrapSportVisionGroupation()
         {
             try
