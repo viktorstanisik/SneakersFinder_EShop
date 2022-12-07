@@ -1,10 +1,7 @@
-﻿using DeepEqual.Syntax;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using Scrapper_Domain;
+﻿using Scrapper_Domain;
 using Scrapper_Domain.Models;
 using Scrapper_Shared.Enums;
-using System.Xml.Linq;
+using System.Linq;
 
 namespace Scrapper_DataAccess.Repositories.SportVision
 {
@@ -18,55 +15,66 @@ namespace Scrapper_DataAccess.Repositories.SportVision
             //_logger = logger;
         }
 
-        public async Task SaveEntities(List<ScrappedModel> models)
+        public async Task SaveEntities(List<ScrappedModel> models, Store store)
         {
-
-
-            foreach (var item in models)
+            try
             {
-                try
+                List<SportVisonDbModel> productsFromScrapper = new();
+                models.ForEach(x => productsFromScrapper.Add(new SportVisonDbModel
                 {
-                    var model = _scrapperDbContext.SportVisonDbModel.FirstOrDefault(x => x.Link == item.Link);
-                    
-                    if(model != null)
-                    {
-                        model.PriceWithDiscount = item.PriceWithDiscount;
-                        model.RegularPrice = item.RegularPrice;
-                        model.DiscountPercent = item.DiscountPercent;
-                        model.Store = item.Store;
-                        model.Brand = item.Brand;
-                        model.Link = item.Link;
-                        model.Name = item.Name;
+                    PriceWithDiscount = x.PriceWithDiscount,
+                    RegularPrice = x.RegularPrice,
+                    DiscountPercent = x.DiscountPercent,
+                    Store = x.Store,
+                    Brand = x.Brand,
+                    Link = x.Link,
+                    Name = x.Name
+                }));
 
-                        _scrapperDbContext.SportVisonDbModel.Update(model);
-                    }
-                    else
-                    {
-                        await _scrapperDbContext.SportVisonDbModel.AddAsync(new SportVisonDbModel
-                        {
-                            PriceWithDiscount = item.PriceWithDiscount,
-                            RegularPrice = item.RegularPrice,
-                            DiscountPercent = item.DiscountPercent,
-                            Store = item.Store,
-                            Brand = item.Brand,
-                            Link = item.Link,
-                            Name = item.Name
-                        });
-                    }
 
-                    //KOGA KE VLEZE AKO IMA VEKE TAKVA STAVKA DA NE PRAVI ADD DA PRAI UPDATE
-                    //LOGGER
-                    await _scrapperDbContext.SaveChangesAsync();
+                // Get all products for given store
+                var productsFromDb = _scrapperDbContext.SportVisonDbModel.Where(x => x.Store == (int)store);
 
-                }
-                catch (Exception)
+                // Product that exist in db, but does not exist in code - Product does not exist in store anymore
+                // Ne e funkcionalno zaradi toa sto nemoze da se izvrsi Except na IQueryable
+                // Da se najde nacin kako da se sporedat 2te listi i da se izvlecat produktite sto gi ima vo baza, a ne gi nasol skraperot
+                //var productThatDoesNotExistAnymore = productsFromDb.Where(x => !productsFromScrapper.Contains(x));
+                //var productThatDoesNotExistAnymore = productsFromDb.ToList().Except(productsFromScrapper);
+
+                foreach (var product in productsFromDb)
                 {
-                    //_logger.LogInformation()
-                    throw;
+                    // If product exists update it and remove if from models that come from code
+                    // If product does not exist leave it to get inserted
+                    var model = models.FirstOrDefault(x => x.Link == product.Link);
+
+                    if (model != null)
+                    {
+                        models.Remove(model);
+                        product.PriceWithDiscount = model.PriceWithDiscount;
+                        product.RegularPrice = model.RegularPrice;
+                        product.DiscountPercent = model.DiscountPercent;
+                        product.Store = model.Store;
+                        product.Brand = model.Brand;
+                        product.Link = model.Link;
+                        product.Name = model.Name;
+                    }
                 }
+
+                //productsFromDb.ToList().RemoveRange(productsFromScrapper);
+                _scrapperDbContext.SportVisonDbModel.UpdateRange(productsFromDb);
+                _scrapperDbContext.SportVisonDbModel.AddRange(productsFromScrapper);
+
+
+                //KOGA KE VLEZE AKO IMA VEKE TAKVA STAVKA DA NE PRAVI ADD DA PRAI UPDATE
+                //LOGGER
+                await _scrapperDbContext.SaveChangesAsync();
 
             }
-
+            catch (Exception)
+            {
+                //_logger.LogInformation()
+                throw;
+            }
         }
 
         public static bool PublicInstancePropertiesEqual<T>(T self, T to, params string[] ignore) where T : class

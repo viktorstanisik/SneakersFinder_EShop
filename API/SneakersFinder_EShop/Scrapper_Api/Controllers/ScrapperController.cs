@@ -21,8 +21,8 @@ namespace Scrapper_Api.Controllers
             try
             {
                 await _scrapperService.SportVisionScrapper();
-                await _scrapperService.SportRealityScrapper();
-                await _scrapperService.BuzzScrapper();
+                //await _scrapperService.SportRealityScrapper();
+                //await _scrapperService.BuzzScrapper();
 
                 return Ok();
 

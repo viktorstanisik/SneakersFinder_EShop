@@ -23,7 +23,7 @@ namespace ScrapperServices.Services.Scrapper
             var models = ScrapeMain(_configuration["StoresUrl:SportReality"], Store.SportReality);
             if (models.Count > 0)
             {
-                await _sportVisionRepository.SaveEntities(models);
+                await _sportVisionRepository.SaveEntities(models, Store.SportReality);
             }
         }
 
@@ -33,7 +33,7 @@ namespace ScrapperServices.Services.Scrapper
             var models = ScrapeMain(_configuration["StoresUrl:SportVison"], Store.SportVision);
             if (models.Count > 0)
             {
-                await _sportVisionRepository.SaveEntities(models);
+                await _sportVisionRepository.SaveEntities(models, Store.SportVision);
             }
         }
 
@@ -43,7 +43,7 @@ namespace ScrapperServices.Services.Scrapper
             var models = ScrapeMain(_configuration["StoresUrl:Buzz"], Store.Buzz);
             if (models.Count > 0)
             {
-                await _sportVisionRepository.SaveEntities(models);
+                await _sportVisionRepository.SaveEntities(models, Store.Buzz);
             }
         }
 
@@ -54,7 +54,7 @@ namespace ScrapperServices.Services.Scrapper
             List<ScrappedModel> items = new();
             using (ChromeDriver driver = new ChromeDriver())
             {
-                while (page < 2)
+                while (page < 5)
                 {
                     driver.Navigate().GoToUrl($"{url}/page-{page}");
                     var productData = driver.FindElements(By.CssSelector(".item-data")).ToList();
