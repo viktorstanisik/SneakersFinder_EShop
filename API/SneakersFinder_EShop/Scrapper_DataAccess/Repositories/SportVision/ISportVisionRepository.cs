@@ -5,6 +5,6 @@ namespace Scrapper_DataAccess.Repositories.SportVision
 {
     public interface ISportVisionRepository
     {
-        Task SaveEntities(List<ScrappedModel> inputModels, Store store);
+        Task UpdateEntities(List<ScrappedModel> inputModels, Store store);
     }
 }

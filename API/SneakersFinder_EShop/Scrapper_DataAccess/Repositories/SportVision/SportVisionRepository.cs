@@ -1,7 +1,6 @@
 ﻿using Scrapper_Domain;
 using Scrapper_Domain.Models;
 using Scrapper_Shared.Enums;
-using System.Linq;
 
 namespace Scrapper_DataAccess.Repositories.SportVision
 {
@@ -15,7 +14,7 @@ namespace Scrapper_DataAccess.Repositories.SportVision
             //_logger = logger;
         }
 
-        public async Task SaveEntities(List<ScrappedModel> models, Store store)
+        public async Task UpdateEntities(List<ScrappedModel> models, Store store)
         {
             try
             {
@@ -33,23 +32,20 @@ namespace Scrapper_DataAccess.Repositories.SportVision
 
 
                 // Get all products for given store
-                var productsFromDb = _scrapperDbContext.SportVisonDbModel.Where(x => x.Store == (int)store);
+                var productsFromDb = _scrapperDbContext.SportVisonDbModel.Where(x => x.Store == (int)store).AsEnumerable();
 
-                // Product that exist in db, but does not exist in code - Product does not exist in store anymore
-                // Ne e funkcionalno zaradi toa sto nemoze da se izvrsi Except na IQueryable
-                // Da se najde nacin kako da se sporedat 2te listi i da se izvlecat produktite sto gi ima vo baza, a ne gi nasol skraperot
-                //var productThatDoesNotExistAnymore = productsFromDb.Where(x => !productsFromScrapper.Contains(x));
-                //var productThatDoesNotExistAnymore = productsFromDb.ToList().Except(productsFromScrapper);
+                // Products that does not exist anymore
+                var productsThatDoesNotExistAnymore = productsFromDb.ExceptBy(productsFromScrapper.Select(x => x.Link), y => y.Link).ToList();
 
                 foreach (var product in productsFromDb)
                 {
                     // If product exists update it and remove if from models that come from code
                     // If product does not exist leave it to get inserted
-                    var model = models.FirstOrDefault(x => x.Link == product.Link);
+                    var model = productsFromScrapper.FirstOrDefault(x => x.Link == product.Link);
 
                     if (model != null)
                     {
-                        models.Remove(model);
+                        productsFromScrapper.Remove(model);
                         product.PriceWithDiscount = model.PriceWithDiscount;
                         product.RegularPrice = model.RegularPrice;
                         product.DiscountPercent = model.DiscountPercent;
@@ -60,8 +56,8 @@ namespace Scrapper_DataAccess.Repositories.SportVision
                     }
                 }
 
-                //productsFromDb.ToList().RemoveRange(productsFromScrapper);
                 _scrapperDbContext.SportVisonDbModel.UpdateRange(productsFromDb);
+                _scrapperDbContext.SportVisonDbModel.RemoveRange(productsThatDoesNotExistAnymore);
                 _scrapperDbContext.SportVisonDbModel.AddRange(productsFromScrapper);
 
 

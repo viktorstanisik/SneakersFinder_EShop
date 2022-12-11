@@ -4,7 +4,6 @@ using OpenQA.Selenium.Chrome;
 using Scrapper_DataAccess.Repositories.SportVision;
 using Scrapper_Domain.Models;
 using Scrapper_Shared.Enums;
-using System.Text.Json;
 
 namespace ScrapperServices.Services.Scrapper
 {
@@ -23,7 +22,7 @@ namespace ScrapperServices.Services.Scrapper
             var models = ScrapeMain(_configuration["StoresUrl:SportReality"], Store.SportReality);
             if (models.Count > 0)
             {
-                await _sportVisionRepository.SaveEntities(models, Store.SportReality);
+                await _sportVisionRepository.UpdateEntities(models, Store.SportReality);
             }
         }
 
@@ -33,7 +32,7 @@ namespace ScrapperServices.Services.Scrapper
             var models = ScrapeMain(_configuration["StoresUrl:SportVison"], Store.SportVision);
             if (models.Count > 0)
             {
-                await _sportVisionRepository.SaveEntities(models, Store.SportVision);
+                await _sportVisionRepository.UpdateEntities(models, Store.SportVision);
             }
         }
 
@@ -43,7 +42,7 @@ namespace ScrapperServices.Services.Scrapper
             var models = ScrapeMain(_configuration["StoresUrl:Buzz"], Store.Buzz);
             if (models.Count > 0)
             {
-                await _sportVisionRepository.SaveEntities(models, Store.Buzz);
+                await _sportVisionRepository.UpdateEntities(models, Store.Buzz);
             }
         }
 
